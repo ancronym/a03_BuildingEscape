@@ -1,0 +1,19 @@
+# I write here! 
+
+#######################################################
+# Unreal generated files are excluded from repository #
+#######################################################
+
+*/Binaries
+*/Build
+*/DerivedDataCache
+*/Intermediate
+*/Saved
+BuildingEscape/Content/StarterContent/
+
+######################
+# VS generated stuff #
+######################
+
+*.VC.db
+BuildingEscape/.vs/BuildingEscape/v15/Browse.VC.opendb
