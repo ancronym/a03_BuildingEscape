@@ -5,7 +5,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "Public/DrawDebugHelpers.h"
- 
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 #define OUT
 
@@ -24,13 +24,18 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
-	
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	/// Look for physics handle
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)	{
+		UE_LOG(LogTemp, Warning, TEXT("Physics component not found of %s"), *(GetOwner()->GetName()));
+	}
+	else	{
+		UE_LOG(LogTemp, Warning, TEXT("Physics component found"));
+	}
 
 	FString ObjectName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Grabber for object %s is reporting for duty!"), *ObjectName);
+	UE_LOG(LogTemp, Warning, TEXT("Grabber for object %s is reporting for duty!"), *ObjectName)
 
 }
 
@@ -87,7 +92,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	AActor* Target = Hit.GetActor();
 	
 	if (Target){
-		UE_LOG(LogTemp, Warning, TEXT("%s hit confirmed."), *(Target->GetName()))
+		UE_LOG(LogTemp, Warning, TEXT("%s hit confirmed."), *(Target->GetName()));
 	}
 	// Ray-cast out to reachdistance
 
