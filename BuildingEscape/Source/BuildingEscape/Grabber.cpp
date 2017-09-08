@@ -6,6 +6,8 @@
 #include "Engine/World.h"
 #include "Public/DrawDebugHelpers.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Components/InputComponent.h"
+
 
 #define OUT
 
@@ -35,8 +37,19 @@ void UGrabber::BeginPlay()
 	}
 
 	FString ObjectName = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Grabber for object %s is reporting for duty!"), *ObjectName)
+	UE_LOG(LogTemp, Warning, TEXT("Grabber for object %s is reporting for duty!"), *ObjectName);
 
+
+	UInputComponent* InputComponent = nullptr;
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent){
+		UE_LOG(LogTemp, Warning, TEXT("InputComponent for %s found"), *(GetOwner()->GetName()));
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Input component unavailable."));
+	}
 }
 
 
@@ -98,3 +111,12 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	// See what we hit
 }
+
+void UGrabber::Grab() {
+	UE_LOG(LogTemp, Warning, TEXT("Grab pressed."))
+}
+
+void UGrabber::Release() {
+	UE_LOG(LogTemp, Warning, TEXT("Grab released."))
+}
+

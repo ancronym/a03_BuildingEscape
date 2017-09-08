@@ -27,6 +27,10 @@ public:
 
 private:
 	AActor* Player;
+
+	//Raycast and grab what is in reach.
+	void Grab();
+	void Release();
 	
 	
 };
