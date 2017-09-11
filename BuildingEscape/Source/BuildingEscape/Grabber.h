@@ -28,9 +28,9 @@ public:
 private:
 	AActor* Player;
 
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
 	
-	
-
 	///Raycast and grab what is in reach.
 	void Grab();
 	void Release();

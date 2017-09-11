@@ -23,8 +23,8 @@ UGrabber::UGrabber()
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
+
 	FindPhysicsHandleComponent();
 	SetupInputComponent();
 	
@@ -36,8 +36,25 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// Get player view point this tick
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
+	
 	// If physics handle is attached
+	if (PhysicsHandle->GrabbedComponent)
+	{
 		// move the object that we are holding
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+
+	}
+	
+		
 		
 	
 	
@@ -47,8 +64,18 @@ void UGrabber::Grab() {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed."))
 
 		// LINE TRACE Try and reach any actor with physics body collision channel set
-		GetFirstPhysicsBodyInReach();
+	auto HitResult = GetFirstPhysicsBodyInReach();
+	auto ComponentToGrab = HitResult.GetComponent();
+	auto ActorHit = HitResult.GetActor();
 
+	if (ActorHit){
+		PhysicsHandle->GrabComponent(
+			ComponentToGrab,
+			NAME_none,
+			ComponentToGrab->GetOwner()-GetActorLocation(),
+			true
+		)
+	}
 		// if we hit, attach a physics handle
 		/// TODO attach physics handle
 
@@ -62,7 +89,7 @@ void UGrabber::Release() {
 
 void UGrabber::FindPhysicsHandleComponent() {
 	/// Look for physics handle
-	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (!PhysicsHandle) {
 		UE_LOG(LogTemp, Warning, TEXT("Physics component not found of %s"), *(GetOwner()->GetName()));
@@ -74,7 +101,7 @@ void UGrabber::FindPhysicsHandleComponent() {
 
 void UGrabber::SetupInputComponent()
 {
-	UInputComponent* InputComponent = nullptr;
+	
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent) {
 		UE_LOG(LogTemp, Warning, TEXT("InputComponent for %s found"), *(GetOwner()->GetName()));
@@ -88,6 +115,7 @@ void UGrabber::SetupInputComponent()
 
 const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 {
+	// Get player view point
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
 
