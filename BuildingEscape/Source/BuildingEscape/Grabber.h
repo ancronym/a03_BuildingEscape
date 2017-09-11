@@ -28,9 +28,19 @@ public:
 private:
 	AActor* Player;
 
-	//Raycast and grab what is in reach.
+	
+	
+
+	///Raycast and grab what is in reach.
 	void Grab();
 	void Release();
 	
-	
+	// Find attached physics handle
+	void FindPhysicsHandleComponent();
+
+	// Setup attached input component
+	void SetupInputComponent();
+
+	// Return first physics body in reach
+	const  FHitResult GetFirstPhysicsBodyInReach();
 };
