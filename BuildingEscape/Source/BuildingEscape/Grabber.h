@@ -6,6 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "Grabber.generated.h"
 
+struct PlayerViewInfo {
+	FVector ViewPointLocation;
+	FRotator ViewPointRotation;
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UGrabber : public UActorComponent
@@ -15,21 +19,22 @@ class BUILDINGESCAPE_API UGrabber : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UGrabber();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	float Reach = 100.f;
+	
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	float Reach = 100.f;
-
 private:
-	AActor* Player;
+	class AActor* Player;
 
-	UPhysicsHandleComponent* PhysicsHandle = nullptr;
-	UInputComponent* InputComponent = nullptr;
+	class UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	class UInputComponent* InputComponent = nullptr;
+	
+	const FVector GetLineTraceEnd();
+	PlayerViewInfo GetViewInfo();
 	
 	///Raycast and grab what is in reach.
 	void Grab();
