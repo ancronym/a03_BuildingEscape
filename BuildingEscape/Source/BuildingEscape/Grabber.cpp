@@ -42,6 +42,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	UE_LOG(LogTemp, Warning, TEXT("Line trace end is %s"), *debugprint); */
 	
 	// If physics handle is attached
+	if (!PhysicsHandle) { return; }
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		// move the object that we are holding
@@ -79,6 +80,7 @@ void UGrabber::Grab() {
 		
 	// if we hit, attach a physics handle
 	if (ActorHit){
+		if (!PhysicsHandle) { return; }
 		PhysicsHandle->GrabComponent(
 			ComponentToGrab,
 			NAME_None,
@@ -92,8 +94,8 @@ void UGrabber::Grab() {
 /// release physics handle
 void UGrabber::Release() {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released."))
-	PhysicsHandle->ReleaseComponent();
-		
+	if (!PhysicsHandle) { return; }
+	PhysicsHandle->ReleaseComponent();		
 }
 
 // Look for attached physics handle

@@ -28,8 +28,6 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	class AActor* Player;
-
 	class UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	class UInputComponent* InputComponent = nullptr;
 	
