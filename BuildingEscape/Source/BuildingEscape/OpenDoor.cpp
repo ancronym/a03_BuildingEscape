@@ -21,27 +21,7 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Owner = GetOwner();
-	Owner->SetActorRotation(FRotator(0.0f, ClosedAngle, 0.0f));
 }
-
-void UOpenDoor::OpenDoor()
-{
-	/*FRotator NewRotation = FRotator(0.0f, OpenAngle, 0.0f);
-	AActor* Owner = GetOwner();
-	Owner->SetActorRotation(NewRotation);*/
-
-	OnOpenRequest.Broadcast();
-}
-
-void UOpenDoor::CloseDoor()
-{
-	FRotator NewRotation = FRotator(0.0f, ClosedAngle, 0.0f);
-	Owner = GetOwner();
-	Owner->SetActorRotation(NewRotation);
-}
-
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -51,13 +31,12 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	// Poll the TriggerVolume
 	// If enough mass is in the volume, open the door
 	if (GetTotalMassOnTriggerPlate() > PlateTriggerValue){
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+		OnOpen.Broadcast();
 	}
 
 	// If the specified amount of time has passed, close the door
-	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay){
-		CloseDoor();
+	else {
+		OnClose.Broadcast();
 	}
 }
 
@@ -80,4 +59,3 @@ float UOpenDoor::GetTotalMassOnTriggerPlate() {
 
 	return TotalMass;
 }
-
